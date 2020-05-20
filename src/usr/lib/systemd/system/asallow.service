@@ -1,0 +1,9 @@
+[Unit]
+Description=Whitelist providers and/or countries using ipset, iptables and ripe data
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/asallow -conf /etc/asallow.conf
+
+[Install]
+WantedBy=multi-user.target
