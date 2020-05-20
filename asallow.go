@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"gopkg.in/gcfg.v1"
 	"io/ioutil"
 	"log"
 	"net"
@@ -16,6 +15,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"gopkg.in/gcfg.v1"
 )
 
 const PREFIX_URI = "https://stat.ripe.net/data/announced-prefixes/data.json?resource="
@@ -86,10 +87,12 @@ func isIpOrCidr(ipcidr string) *net.IP {
 }
 
 func doipset(cfg config) {
-	ipset_header := "create AS_allow hash:net family inet comment\n"
-	ipset_header += "create AS_allow6 hash:net family inet6 comment\n"
-	ipset_header += "create AS_allow_swap hash:net family inet comment\n"
-	ipset_header += "create AS_allow_swap6 hash:net family inet6 comment\n"
+	ipset_header := "create -exist AS_allow hash:net family inet comment\n"
+	ipset_header += "create -exist AS_allow6 hash:net family inet6 comment\n"
+	ipset_header += "create -exist AS_allow_swap hash:net family inet comment\n"
+	ipset_header += "create -exist AS_allow_swap6 hash:net family inet6 comment\n"
+	ipset_header += "flush AS_allow_swap\n"
+	ipset_header += "flush AS_allow_swap6\n"
 	ipset_footer := "swap AS_allow AS_allow_swap\n"
 	ipset_footer += "swap AS_allow6 AS_allow_swap6\n"
 	ipset_footer += "destroy AS_allow_swap\n"
